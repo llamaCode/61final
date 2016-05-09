@@ -65,5 +65,5 @@ ___
 	- This file must be in a repository named **`61final`** forked from https://github.com/61cst112/61final
 	- This repository must be in your Github.com account on http://github.com
 
-**Final exam code will not be accepted unless it meets ALL of these conditions .**
+**To receive a passing grade, your final exam code must meet ALL of these conditions.**
 

@@ -3,6 +3,10 @@
 //MARIA CAMPAGNA
 //CST 112
 //PROFESSOR BAM
+
+//***WORKING ON BUTTONS FOR PERCENTAGE INCREASES
+//***WORKING ON NEXT ARRAY OF 11 OBJECTS
+
 Button[] buttons;
 String bname[] = {"20%", "15%", "10%", "5%"};
 

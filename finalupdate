@@ -7,11 +7,14 @@
 //***WORKING ON BUTTONS FOR PERCENTAGE INCREASES
 //***WORKING ON NEXT ARRAY OF 11 OBJECTS
 
-Button[] buttons;
-String bname[] = {"20%", "15%", "10%", "5%"};
+//--  Button[] buttons;
+//--  String bname[] = {"20%", "15%", "10%", "5%"};
+String bname[] = { "TALL", "WIDE", "SORT", "RAISE", "RESET", "QUIT"};
+//BAM:  Above names are incomplete, but this is just an example.
 
-int btn = 4;
-Button[] button = new Button[btn];
+//--  int btn = 4;
+/*BAM*/  int btn=  bname.length;
+Button[] buttons = new Button[btn];
 
 String title = "Project 5";
 String author = "By: Maria Campagna";
@@ -32,7 +35,17 @@ void setup() {
   size(750, 550);
   bottom = height - 100;
   restart();
+  // Define buttons.
+  float x = width-30, y = 50;
+  for (int a = 0; a < btn; a++) {
+    buttons[a]= new Button(bname[a]);
+    buttons[a].x=  x;
+    buttons[a].y=  y;
+    y += 60;
+  }
 }
+
+
 
 //CREATING A RESTART POINT TO RANDOMIZE EACH PERSON
 void restart() {
@@ -47,6 +60,7 @@ void draw() {
   scene();
   messages();
   each();
+  eachbut();
   news();
 }
 
@@ -84,6 +98,12 @@ void each() {
   for (int a = 0; a < ppl; a++) {
     person[a].show (x, y);
     x = x + 90;
+  }
+}
+//WHERE EACH BUTTOn IS DISPLAYED
+void eachbut() {
+  for (int a = 0; a < btn; a++) {
+    buttons[a].display ();
   }
 }
 
@@ -126,6 +146,43 @@ void keyPressed() {
   if (key == 'n' ) swap(person, ppl-1, narrowest(person, ppl));
   if (key == 's' ) sorting(person, ppl);
 }
+
+//BAM:  For this example, buttons were: "TALL", "MINI", "SORT", "RAISE", "RESET", "QUIT"
+
+//MOUSE PRESS BUTTONS
+void mousePressed() {
+  int n=0;
+  if (buttons[n++].hit( mouseX, mouseY )) tall(person, ppl);
+  if (buttons[n++].hit( mouseX, mouseY )) mini(person, ppl);
+  if (buttons[n++].hit( mouseX, mouseY )) sorting(person, ppl);
+  if (buttons[n++].hit( mouseX, mouseY )) raiseall(person, ppl);
+  if (buttons[n++].hit( mouseX, mouseY )) restart();
+  if (buttons[n++].hit( mouseX, mouseY )) exit();
+  println( "n="+n );
+}
+
+
+
+//// GIVE RAISES TO ALL
+void raiseall(Person[] p, int m) {
+  for (int a = 1; a < m; a++) {
+    if (p[a].age<18) return;    // No raise if underage.
+    //
+    float pct;
+    float sal=  p[a].salary;
+    print( "\n\n $" + sal );
+    // First, determine the percentage.
+    if (sal<25000) pct=20;
+    else if (sal<50000) pct=15;
+    else if (sal<75000) pct=10;
+    else pct=5;
+    // now give the raise.
+    p[a].raise( pct );
+    println( pct + "%" );
+  }
+  return;
+}
+
 
 //SMALLEST VOID & INT
 void mini(Person[] p, int m) {
@@ -213,6 +270,9 @@ class Person {
   float r, g, b, rt, bt, gt;
   String name = "?";
 
+  float salary;
+  int age;
+
   Person(String star) {
     w = random (20, 100);
     h = random (50, 200);
@@ -227,6 +287,12 @@ class Person {
     rt = random(200);
     bt = random(200);
     gt = random(200);
+    
+    age=  int( random(1,99));
+    //--  if (age>=18) salary=  random(100,000);
+    //BAM:    This sets salary to a random number betwee 100 and zero!
+    /*BAM*/  if (age>=18) salary=  random(100000);
+    else salary=0;
 
     name = star;
   }
@@ -247,7 +313,8 @@ class Person {
     text(int(a), x-20, y+55);
 
     if (a > 18) {
-      text('$' + int(s), x-20, y+66);
+      //--  text('$' + int(s), x-20, y+66);
+      text("$ " + int(s), x-20, y+66);
     }
     
     if (keyPressed == true) {
@@ -280,9 +347,20 @@ class Person {
     fill(0);
     ellipse(x, y, 5, 5);
   }
-}
+  
+  // Raise salary by specified pct %
+  void raise( float pct ) {
+    println( "\nraise:  "+ pct );
+    if (age < 18) return;
+    salary += salary * pct / 100;
+    s += s * pct / 100;
+    //BAM:  Duplicate properties (s & salary, a and age)
+  }
+  
+}//class//
 
 class Button {
+  float x,y;
   float w, h;
   float r, g, b;
   String butname = "?";
@@ -293,10 +371,38 @@ class Button {
     
     butname = bname;
   }
-  
+  Button(String bname, float x, float y) {
+    this.x=  x;
+    this.y=  y;
+    w = 50;
+    h = 50;
+    
+    butname = bname;
+  }
+
+  //BAM:  Simplerdisplay if you use Object-Oriented design.  
+  void display(){
+    fill(255);
+    rectMode(CENTER);
+    rect(x, y, w, h);
+    fill(0); 
+    text( butname, x+10-w/2, y );
+  }
+
   void display(float x, float y){
     fill(255);
     rectMode(CENTER);
     rect(x, y, w, h);
+
+    /*BAM*/  fill(0); text( butname, x+10-w/2, y );
+
   }
-}
+
+  // Return true if this button was hit.
+  boolean hit( float xx, float yy ) {
+    return ( abs(x-xx) < w/2  &&  abs(y-yy) < h/2 );
+    // (True if distance from center is within width & height ).
+  }
+  
+  
+}//class//
